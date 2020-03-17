@@ -1,5 +1,4 @@
 using System;
-using Enemy;
 using UnityEngine;
 
 namespace StateMachine
@@ -17,7 +16,7 @@ namespace StateMachine
         {
         }
 
-        public abstract T act();
+        public abstract T? act();
 
         public virtual void onStateExit()
         {

@@ -8,28 +8,26 @@ namespace StateMachine
     {
         private State<T> currentState;
         private Dictionary<T, State<T>> stateMap;
-        private T keepState;
 
-        public StateMachine(Dictionary<T, State<T>> stateMap, T keepState)
+        public StateMachine(Dictionary<T, State<T>> stateMap)
         {
             this.stateMap = stateMap;
-            this.keepState = keepState;
         }
 
-        public T act()
+        public T? act()
         {
             return currentState.act();
         }
 
-        public void transition(T e)
+        public void transition(T? e)
         {
-            if (e.Equals(keepState))
+            if (e == null)
                 return;
-            if (stateMap.ContainsKey(e))
+            if (stateMap.ContainsKey((T) e))
             {
                 currentState?.onStateExit();
                 Debug.Log("Exiting: " + currentState);
-                currentState = stateMap[e];
+                currentState = stateMap[(T) e];
                 currentState.onStateEnter();
                 Debug.Log("Entering: " + currentState);
             }
