@@ -34,6 +34,13 @@
             <e p="NPCTankController.cs" t="Include" />
             <e p="PatrolState.cs" t="Include" />
           </e>
+          <e p="Green" t="Include">
+            <e p="IPlatoonController.cs" t="Include" />
+            <e p="StateMachine" t="Include">
+              <e p="State.cs" t="Include" />
+              <e p="StateMachine.cs" t="Include" />
+            </e>
+          </e>
           <e p="Misc" t="Include">
             <e p="AutoDestruct.cs" t="Include" />
             <e p="Bullet.cs" t="Include" />
@@ -43,10 +50,6 @@
           <e p="SimpleFSM" t="Include">
             <e p="FSM.cs" t="Include" />
             <e p="SimpleFSM.cs" t="Include" />
-          </e>
-          <e p="StateMachine" t="Include">
-            <e p="State.cs" t="Include" />
-            <e p="StateMachine.cs" t="Include" />
           </e>
         </e>
         <e p="Standard Assets" t="Include">

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace StateMachine
+namespace GreenStateMachine
 {
     public abstract class State<T> where T : struct, IConvertible
     {
