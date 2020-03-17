@@ -36,10 +36,12 @@
           </e>
           <e p="Green" t="Include">
             <e p="IPlatoonController.cs" t="Include" />
+            <e p="PatrolState.cs" t="Include" />
             <e p="StateMachine" t="Include">
               <e p="State.cs" t="Include" />
               <e p="StateMachine.cs" t="Include" />
             </e>
+            <e p="TankController.cs" t="Include" />
           </e>
           <e p="Misc" t="Include">
             <e p="AutoDestruct.cs" t="Include" />
