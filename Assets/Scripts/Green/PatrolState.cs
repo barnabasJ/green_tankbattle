@@ -47,8 +47,6 @@ namespace Green
             
             //todo Spot enemy's
             
-            
-            
             return null;
         }
 
