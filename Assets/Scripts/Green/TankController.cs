@@ -6,7 +6,8 @@ namespace Green
 {
     public enum TankState
     {
-        PATROLING
+        PATROLING,
+        EVADING
     }
 
     public class TankController : MonoBehaviour
