@@ -1,21 +1,49 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Green
 {
     public class PlatoonController : MonoBehaviour, IPlatoonController
     {
-        private List<GameObject> tanks = new List<GameObject>();
         private List<GameObject> aliveTanks = new List<GameObject>();
         private Vector3 platoonMeanPosition;
-        private List<GameObject> spottedEnemies = new List<GameObject>();
-        private GameObject target = null;
+        private readonly List<GameObject> spottedEnemies = new List<GameObject>();
+        private readonly List<GameObject> tanks = new List<GameObject>();
+        private GameObject target;
 
         public GameObject getEnemyTarget()
         {
-            return this.target;
+            return target;
+        }
+
+        public int getCurrentEnemyCount()
+        {
+            return spottedEnemies.Count;
+        }
+
+        public void enemySpotted(GameObject enemy)
+        {
+            spottedEnemies.Add(enemy);
+        }
+
+        public int getPlatoonCount()
+        {
+            return tanks.Count;
+        }
+
+        public int getAliveTanksCount()
+        {
+            return aliveTanks.Count;
+        }
+
+        public void reportForDuty(GameObject tank)
+        {
+            tanks.Add(tank);
+        }
+
+        public Vector3 getPlatoonMeanPosition()
+        {
+            return platoonMeanPosition;
         }
 
         private void calcTarget()
@@ -24,10 +52,10 @@ namespace Green
                 this.target = null;
 
             var target = spottedEnemies[0];
-            var shortestDistance = Vector3.Distance(this.platoonMeanPosition, spottedEnemies[0].transform.position);
+            var shortestDistance = Vector3.Distance(platoonMeanPosition, spottedEnemies[0].transform.position);
             for (var i = 1; i < spottedEnemies.Count; i++)
             {
-                var currentDistance = Vector3.Distance(this.platoonMeanPosition, spottedEnemies[i].transform.position);
+                var currentDistance = Vector3.Distance(platoonMeanPosition, spottedEnemies[i].transform.position);
                 if (currentDistance < shortestDistance)
                 {
                     shortestDistance = currentDistance;
@@ -38,63 +66,33 @@ namespace Green
             this.target = target;
         }
 
-        public int getCurrentEnemyCount()
-        {
-            return this.spottedEnemies.Count;
-        }
-
-        public void enemySpotted(GameObject enemy)
-        {
-            this.spottedEnemies.Add(enemy);
-        }
-
-        public int getPlatoonCount()
-        {
-            return this.tanks.Count;
-        }
-
-        public int getAliveTanksCount()
-        {
-            return this.aliveTanks.Count;
-        }
-
         private void calcAliveTanks()
         {
-            this.aliveTanks = new List<GameObject>();
+            aliveTanks = new List<GameObject>();
             foreach (var tank in tanks)
                 if (tank.GetComponent<TankController>().health > 0)
                     aliveTanks.Add(tank);
         }
 
-        public void reportForDuty(GameObject tank)
-        {
-            this.tanks.Add(tank);
-        }
-
-        public Vector3 getPlatoonMeanPosition()
-        {
-            return this.platoonMeanPosition;
-        }
-
         private void calcPlatoonMeanPosition()
         {
-            Vector3 mean = new Vector3();
+            var mean = new Vector3();
             foreach (var tank in tanks)
                 mean += tank.transform.position;
             if (tanks.Count > 0)
-                this.platoonMeanPosition = mean /= tanks.Count;
+                platoonMeanPosition = mean /= tanks.Count;
             else
-                this.platoonMeanPosition = Vector3.zero;
+                platoonMeanPosition = Vector3.zero;
         }
 
         protected void LateUpdate()
         {
             // calc platoon info
-            this.calcAliveTanks();
-            this.calcPlatoonMeanPosition();
+            calcAliveTanks();
+            calcPlatoonMeanPosition();
 
             // calc enemy info
-            this.calcTarget();
+            calcTarget();
         }
     }
 }

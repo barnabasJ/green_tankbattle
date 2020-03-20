@@ -14,7 +14,7 @@ namespace Green
     public class TankController : MonoBehaviour
     {
         public GameObject Bullet;
-        private int health;
+        public int health { get; private set; }
         private float elapsedTime;
         private float shootRate;
         private Transform turret;
