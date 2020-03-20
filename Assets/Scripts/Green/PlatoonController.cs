@@ -9,9 +9,9 @@ namespace Green
     {
         private List<GameObject> tanks = new List<GameObject>();
         private List<GameObject> aliveTanks = new List<GameObject>();
+        private Vector3 platoonMeanPosition;
         private List<GameObject> spottedEnemies = new List<GameObject>();
         private GameObject target = null;
-        private Vector3 platoonMeanPosition;
 
         public GameObject getEnemyTarget()
         {
