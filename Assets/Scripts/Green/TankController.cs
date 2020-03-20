@@ -6,7 +6,8 @@ namespace Green
 {
     public enum TankState
     {
-        PATROLING
+        PATROLING,
+        CHASE
     }
 
     public class TankController : MonoBehaviour
@@ -38,7 +39,8 @@ namespace Green
 
             var stateMap = new Dictionary<TankState, State<TankState>>
             {
-                {TankState.PATROLING, new PatrolState(gameObject, this)}
+                {TankState.PATROLING, new PatrolState(gameObject, this)},
+                {TankState.CHASE,  new ChaseState(gameObject, this)}
             };
 
             stateMachine = new StateMachine<TankState>(stateMap);
@@ -47,7 +49,25 @@ namespace Green
         //Update each frame
         protected void Update()
         {
+            if(EnemyPowerIsLow()) {
+                stateMachine.transition(TankState.CHASE);
+            }
             stateMachine.transition(stateMachine.act());
         }
+        
+
+        // when the platoon spot an enemy, compare the enemy power to the platoon power
+        // if enemy power higher, switch to flee
+        // if enemy power lower, switch to chase
+        // TODO: Write check enemy power function
+        bool EnemyPowerIsLow() {
+            return false;
+        }
+
+        // return an enemy who is up for kill
+        public GameObject CurrentChaseEnemy(){
+            return null;
+        }
+        
     }
 }

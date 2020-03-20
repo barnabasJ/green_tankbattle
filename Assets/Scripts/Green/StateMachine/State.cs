@@ -14,12 +14,14 @@ namespace GreenStateMachine
 
         public virtual void onStateEnter()
         {
+
         }
 
-        public abstract T? act();
+        public abstract T? act(); 
 
         public virtual void onStateExit()
         {
+            
         }
     }
 }
