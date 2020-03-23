@@ -7,7 +7,9 @@ namespace Green
 {
     public enum TankState
     {
-        PATROLLING
+        PATROLLING,
+        CHASE,
+        EVADING
     }
 
     public class TankController : MonoBehaviour
@@ -37,26 +39,49 @@ namespace Green
             turret = gameObject.transform.GetChild(0).transform;
             bulletSpawnPoint = turret.GetChild(0).transform;
 
-            //platoonController = GameObject.FindWithTag("PlatoonController").GetComponent<IPlatoonController>();
+            platoonController =
+                GameObject.FindWithTag("PlatoonController").GetComponent<IPlatoonController>();
 
             var stateMap = new Dictionary<TankState, State<TankState>>
             {
                 {TankState.PATROLLING, new PatrolState(gameObject, this)}
+                {TankState.PATROLING, new PatrolState(gameObject, this)},
+                {TankState.CHASE,  new ChaseState(gameObject, this)}
             };
 
             stateMachine = new StateMachine<TankState>(stateMap);
-            
         }
 
         protected void Update()
         {
+            
             // Solution or now to set the initial state
             if (!IsFirstStateSet) {
                 stateMachine.transition(TankState.PATROLLING);
                 IsFirstStateSet = false;
             }
+            
+            if(EnemyPowerIsLow()) {
+                stateMachine.transition(TankState.CHASE);
+            }
+
 
             stateMachine.transition(stateMachine.act());
         }
+        
+
+        // when the platoon spot an enemy, compare the enemy power to the platoon power
+        // if enemy power higher, switch to flee
+        // if enemy power lower, switch to chase
+        // TODO: Write check enemy power function
+        bool EnemyPowerIsLow() {
+            return false;
+        }
+
+        // return an enemy who is up for kill
+        public GameObject CurrentChaseEnemy(){
+            return null;
+        }
+        
     }
 }
