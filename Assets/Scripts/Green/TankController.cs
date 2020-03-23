@@ -21,7 +21,7 @@ namespace Green
         private Transform turret;
         private Transform bulletSpawnPoint;
         private StateMachine<TankState> stateMachine;
-        private IPlatoonController platoonController;
+        public IPlatoonController platoonController;
 
         // Solution or now to set the initial state
         private bool IsFirstStateSet = false;
@@ -39,7 +39,7 @@ namespace Green
             turret = gameObject.transform.GetChild(0).transform;
             bulletSpawnPoint = turret.GetChild(0).transform;
 
-            //platoonController = GameObject.FindWithTag("PlatoonController").GetComponent<IPlatoonController>();
+            platoonController = GameObject.FindObjectOfType<PlatoonControllerMock>().GetComponent<PlatoonControllerMock>();
 
             var stateMap = new Dictionary<TankState, State<TankState>>
             {

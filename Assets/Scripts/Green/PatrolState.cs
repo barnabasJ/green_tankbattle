@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DefaultNamespace;
 using GreenStateMachine;
 using UnityEngine;
 using UnityEngine.AI;
@@ -14,7 +15,7 @@ namespace Green
         // If a point is reached, the platoon will patrol to the next location in this list.
         // If the last point is reached the platoon will patrol back to the first point.
         // </summary>
-        private readonly List<Vector3> _wayPoints;
+        private readonly Vector3[] _wayPoints;
         
         // <summary>
         // This is the index off the current waypoint in the _wayPoints list.
@@ -28,11 +29,7 @@ namespace Green
         {
             _tankController = tankController;
             target = Object.FindObjectOfType<Target>();
-            _wayPoints = new List<Vector3> {
-                new Vector3(930, 113.3f, 1945), 
-                new Vector3(971, 113.3f, 2272), 
-                new Vector3(1202, 113.3f, 2243)
-            };
+            _wayPoints = Object.FindObjectOfType<PatrollingWayPoints>().GetComponent<PatrollingWayPoints>().wayPoints;
             _currentWayPointIndex = 0;
         }
 
@@ -44,15 +41,20 @@ namespace Green
         public override TankState? act()
         {
             if(PlatoonHasReachedItsDestination()) OrderToPatrolTowardsNextWayPoint();
-            
-            //todo Spot enemy's
+
+            if (EnemiesAreInSight()) return TankState.CHASE;
             
             return null;
         }
 
+        private bool EnemiesAreInSight()
+        {
+            return _tankController.platoonController.getCurrentEnemyCount() > 0;
+        }
+
         private void OrderToPatrolTowardsNextWayPoint()
         {
-            if (_currentWayPointIndex >= _wayPoints.Count - 1) {
+            if (_currentWayPointIndex >= _wayPoints.Length - 1) {
                 _currentWayPointIndex = 0;
             } else {
                 _currentWayPointIndex++;
