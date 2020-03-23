@@ -39,13 +39,11 @@ namespace Green
             turret = gameObject.transform.GetChild(0).transform;
             bulletSpawnPoint = turret.GetChild(0).transform;
 
-            platoonController =
-                GameObject.FindWithTag("PlatoonController").GetComponent<IPlatoonController>();
+            //platoonController = GameObject.FindWithTag("PlatoonController").GetComponent<IPlatoonController>();
 
             var stateMap = new Dictionary<TankState, State<TankState>>
             {
-                {TankState.PATROLLING, new PatrolState(gameObject, this)}
-                {TankState.PATROLING, new PatrolState(gameObject, this)},
+                {TankState.PATROLLING, new PatrolState(gameObject, this)},
                 {TankState.CHASE,  new ChaseState(gameObject, this)}
             };
 
