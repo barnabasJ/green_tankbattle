@@ -11,13 +11,14 @@ public class ChaseState : State<TankState>
     private GameObject targetEnemy;
         public ChaseState(GameObject gameObject, TankController tankcontroller) : base(gameObject)
         {
+            target = Object.FindObjectOfType<Target>();
             this.tankController = tankController;
-            this.targetEnemy = tankController.CurrentChaseEnemy();
         }
 
+        // when enter this state, get the current enemy that the group is chasing
         public override void onStateEnter()
         {
-            
+            this.targetEnemy = tankController.CurrentChaseEnemy();
         }
         public override void onStateExit()
         {
@@ -25,6 +26,7 @@ public class ChaseState : State<TankState>
         }
 
         public override TankState? act(){
+            target.UpdateTargets(targetEnemy.transform.position);
             return null;
         }
 }

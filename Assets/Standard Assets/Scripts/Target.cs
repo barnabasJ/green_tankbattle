@@ -12,7 +12,7 @@ public class Target : MonoBehaviour
 		UpdateTargets (targetMarker.position);
     }
 
-    void UpdateTargets ( Vector3 targetPosition  )
+    public void UpdateTargets ( Vector3 targetPosition  )
     {
 	    foreach(UnityEngine.AI.NavMeshAgent agent in navAgents) 
         {
