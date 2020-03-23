@@ -9,7 +9,8 @@ namespace Green
     {
         PATROLLING,
         CHASE,
-        EVADING
+        EVADING,
+        REGROUPING,
     }
 
     public class TankController : MonoBehaviour
@@ -44,7 +45,8 @@ namespace Green
             var stateMap = new Dictionary<TankState, State<TankState>>
             {
                 {TankState.PATROLLING, new PatrolState(gameObject, this)},
-                {TankState.CHASE,  new ChaseState(gameObject, this)}
+                {TankState.CHASE,  new ChaseState(gameObject, this)},
+                {TankState.REGROUPING, new RegroupState(gameObject, this)}
             };
 
             stateMachine = new StateMachine<TankState>(stateMap);
