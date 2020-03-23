@@ -7,7 +7,8 @@ namespace Green
     public enum TankState
     {
         PATROLING,
-        CHASE
+        CHASE,
+        EVADING
     }
 
     public class TankController : MonoBehaviour

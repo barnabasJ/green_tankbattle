@@ -12,6 +12,7 @@ namespace GreenStateMachine
             this.gameObject = gameObject;
         }
 
+
         public virtual void onStateEnter()
         {
 
@@ -23,5 +24,6 @@ namespace GreenStateMachine
         {
             
         }
+
     }
 }
