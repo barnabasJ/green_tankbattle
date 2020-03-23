@@ -1,24 +1,39 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Green
 {
+    /// <summary>
+    /// PlatoonController
+    ///
+    /// Houses all the information shared between all tanks
+    /// </summary>
     public class PlatoonController : MonoBehaviour, IPlatoonController
     {
         private List<GameObject> aliveTanks = new List<GameObject>();
         private Vector3 platoonMeanPosition;
-        private readonly List<GameObject> spottedEnemies = new List<GameObject>();
-        private readonly List<GameObject> tanks = new List<GameObject>();
-        private GameObject target;
+        private List<GameObject> spottedEnemies = new List<GameObject>();
+        private List<GameObject> targets = new List<GameObject>();
+        private List<GameObject> tanks = new List<GameObject>();
+
+
+        public void Awake()
+        {
+            // Find all tanks from the GreenPlatoon
+            tanks = new List<GameObject>(GameObject.FindGameObjectsWithTag("GreenTanks"));
+        }
 
         public GameObject getEnemyTarget()
         {
-            return target;
+            if (targets.Count > 0)
+                return targets[0];
+            return null;
         }
 
-        public int getCurrentEnemyCount()
+        public List<GameObject> getCurrentTargets()
         {
-            return spottedEnemies.Count;
+            return targets;
         }
 
         public void enemySpotted(GameObject enemy)
@@ -26,20 +41,12 @@ namespace Green
             spottedEnemies.Add(enemy);
         }
 
-        public int getPlatoonCount()
+
+        public List<GameObject> getAliveTanks()
         {
-            return tanks.Count;
+            return aliveTanks;
         }
 
-        public int getAliveTanksCount()
-        {
-            return aliveTanks.Count;
-        }
-
-        public void reportForDuty(GameObject tank)
-        {
-            tanks.Add(tank);
-        }
 
         public Vector3 getPlatoonMeanPosition()
         {
@@ -48,22 +55,9 @@ namespace Green
 
         private void calcTarget()
         {
-            if (spottedEnemies.Count <= 0)
-                this.target = null;
-
-            var target = spottedEnemies[0];
-            var shortestDistance = Vector3.Distance(platoonMeanPosition, spottedEnemies[0].transform.position);
-            for (var i = 1; i < spottedEnemies.Count; i++)
-            {
-                var currentDistance = Vector3.Distance(platoonMeanPosition, spottedEnemies[i].transform.position);
-                if (currentDistance < shortestDistance)
-                {
-                    shortestDistance = currentDistance;
-                    target = spottedEnemies[i];
-                }
-            }
-
-            this.target = target;
+            targets = new List<GameObject>(spottedEnemies);
+            targets.Sort(new TargetComparer(platoonMeanPosition));
+            spottedEnemies = new List<GameObject>();
         }
 
         private void calcAliveTanks()
@@ -76,11 +70,14 @@ namespace Green
 
         private void calcPlatoonMeanPosition()
         {
-            var mean = new Vector3();
-            foreach (var tank in tanks)
-                mean += tank.transform.position;
-            if (tanks.Count > 0)
-                platoonMeanPosition = mean /= tanks.Count;
+            if (aliveTanks.Count > 0)
+            {
+                var mean = new Vector3();
+                foreach (var tank in aliveTanks)
+                    mean += tank.transform.position;
+
+                platoonMeanPosition = mean / aliveTanks.Count;
+            }
             else
                 platoonMeanPosition = Vector3.zero;
         }
@@ -93,6 +90,33 @@ namespace Green
 
             // calc enemy info
             calcTarget();
+        }
+    }
+
+    /// <summary>
+    /// TargetComparer
+    ///
+    /// used to sort all targets by  priority
+    /// 
+    /// <<param name="platoonPosition">
+    /// The position of the platoon used to calculate the distance to the targets.
+    /// </param>
+    /// </summary>
+    public class TargetComparer : Comparer<GameObject>
+    {
+        private readonly Vector3 platoonPosition;
+
+        public TargetComparer(Vector3 platoonPosition)
+        {
+            this.platoonPosition = platoonPosition;
+        }
+
+        public override int Compare(GameObject target1, GameObject target2)
+        {
+            // use sqrMagnitude instead of Vector3.distance which is the 
+            // same as (a - b).magnitude which is more expensive
+            return (int) ((platoonPosition - target1.transform.position).sqrMagnitude -
+                          (platoonPosition - target2.transform.position).sqrMagnitude);
         }
     }
 }
