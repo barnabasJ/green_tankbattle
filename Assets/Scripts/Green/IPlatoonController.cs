@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Green
@@ -5,11 +6,9 @@ namespace Green
     public interface IPlatoonController
     {
         GameObject getEnemyTarget();
-        int getCurrentEnemyCount();
+        List<GameObject> getCurrentTargets();
         void enemySpotted(GameObject enemy);
-        int getPlatoonCount();
-        int getAliveTanksCount();
-        void reportForDuty(GameObject tank);
+        List<GameObject> getAliveTanks();
         Vector3 getPlatoonMeanPosition();
     }
 }
