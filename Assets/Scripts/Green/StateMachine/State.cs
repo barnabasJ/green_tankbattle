@@ -12,10 +12,18 @@ namespace GreenStateMachine
             this.gameObject = gameObject;
         }
 
-        public virtual void onStateEnter() { }
 
-        public abstract T? act();
+        public virtual void onStateEnter()
+        {
 
-        public virtual void onStateExit() { }
+        }
+
+        public abstract T? act(); 
+
+        public virtual void onStateExit()
+        {
+            
+        }
+
     }
 }
