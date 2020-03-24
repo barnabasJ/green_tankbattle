@@ -28,7 +28,8 @@ namespace Green
         public PatrolState(GameObject gameObject, TankController tankController) : base(gameObject)
         {
             _tankController = tankController;
-            target = Object.FindObjectOfType<Target>();
+            //target = Object.FindObjectOfType<Target>();
+            target = new Target();
             _wayPoints = Object.FindObjectOfType<PatrollingWayPoints>().GetComponent<PatrollingWayPoints>().wayPoints;
             _currentWayPointIndex = 0;
         }

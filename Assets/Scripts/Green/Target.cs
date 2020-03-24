@@ -1,21 +1,16 @@
-using UnityEngine;
-using System.Collections;
+﻿using UnityEngine;
+using UnityEngine.AI;
 
-public class Target : MonoBehaviour
+namespace Green
 {
-    private UnityEngine.AI.NavMeshAgent[] navAgents;
-    public Transform targetMarker;
-
-    public void Start ()
+    public class Target
     {
-	    navAgents = FindObjectsOfType(typeof(UnityEngine.AI.NavMeshAgent)) as UnityEngine.AI.NavMeshAgent[];
-    }
-
-    public void UpdateTargets ( Vector3 targetPosition  )
-    {
-	    foreach(UnityEngine.AI.NavMeshAgent agent in navAgents) 
+        public void UpdateTargets ( Vector3 targetPosition  )
         {
-		    agent.destination = targetPosition;
+            if (!(Object.FindObjectsOfType(typeof(NavMeshAgent)) is NavMeshAgent[] navAgents)) return;
+            foreach (NavMeshAgent agent in navAgents) {
+                agent.destination = targetPosition;
+            }
         }
     }
 }

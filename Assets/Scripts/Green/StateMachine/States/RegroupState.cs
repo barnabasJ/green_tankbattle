@@ -13,7 +13,7 @@ namespace Green
         
         public RegroupState(GameObject gameObject, TankController tankController) : base(gameObject)
         {
-            target = Object.FindObjectOfType<Target>();
+            target = new Target();
             
             regroupingLocation = CalculateRegroupingLocation();
             OrderTanksTowardsRegroupingLocation();

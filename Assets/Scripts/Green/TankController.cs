@@ -41,7 +41,10 @@ namespace Green
             bulletSpawnPoint = turret.GetChild(0).transform;
 
             platoonController = GameObject.FindObjectOfType<PlatoonControllerMock>().GetComponent<PlatoonControllerMock>();
+        }
 
+        public void Start()
+        {
             var stateMap = new Dictionary<TankState, State<TankState>>
             {
                 {TankState.PATROLLING, new PatrolState(gameObject, this)},
