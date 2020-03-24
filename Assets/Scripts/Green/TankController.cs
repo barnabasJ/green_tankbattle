@@ -9,8 +9,12 @@ namespace Green
         PATROLING,
         CHASE,
         EVADING,
+<<<<<<< Updated upstream
         FLEE,
         DEAD,
+=======
+        ATTACKING,
+>>>>>>> Stashed changes
     }
 
     public class TankController : MonoBehaviour
