@@ -28,7 +28,6 @@ namespace Green
         public PatrolState(GameObject gameObject, TankController tankController) : base(gameObject)
         {
             _tankController = tankController;
-            //target = Object.FindObjectOfType<Target>();
             target = new Target();
             _wayPoints = Object.FindObjectOfType<PatrollingWayPoints>().GetComponent<PatrollingWayPoints>().wayPoints;
             _currentWayPointIndex = 0;
@@ -50,7 +49,8 @@ namespace Green
 
         private bool EnemiesAreInSight()
         {
-            return _tankController.platoonController.getCurrentEnemyCount() > 0;
+            return false;
+            //return _tankController.platoonController.getCurrentEnemyCount() > 0;
         }
 
         private void OrderToPatrolTowardsNextWayPoint()
