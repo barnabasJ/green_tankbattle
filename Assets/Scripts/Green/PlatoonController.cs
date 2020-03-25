@@ -82,8 +82,6 @@ namespace Green
 
         protected void LateUpdate()
         {
-            Debug.Log("Hier");
-            
             // calc platoon info
             calcAliveTanks();
             calcPlatoonMeanPosition();

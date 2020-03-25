@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace DefaultNamespace
+namespace Green
 {
     public class PatrollingWayPoints : MonoBehaviour
     {

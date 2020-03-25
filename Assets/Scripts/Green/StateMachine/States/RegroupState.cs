@@ -1,4 +1,5 @@
-﻿using GreenStateMachine;
+﻿using System.Collections.Generic;
+using GreenStateMachine;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,12 +11,14 @@ namespace Green
         private readonly Vector3 regroupingLocation;
 
         private readonly Target target;
+
+        private readonly TankController _tankController;
         
         public RegroupState(GameObject gameObject, TankController tankController) : base(gameObject)
         {
             target = new Target();
-            
-            regroupingLocation = CalculateRegroupingLocation();
+            _tankController = tankController;
+            regroupingLocation = _tankController.platoonController.getPlatoonMeanPosition();
             OrderTanksTowardsRegroupingLocation();
         }
 
@@ -25,20 +28,9 @@ namespace Green
             return null;
         }
 
-        private Vector3 CalculateRegroupingLocation()
-        {
-            TankController[] tanksInPlatoon = Object.FindObjectsOfType<TankController>();
-            
-            Vector3 tankLocationSum = new Vector3(0,0,0);
-            foreach (var tank in tanksInPlatoon) { tankLocationSum += tank.gameObject.transform.position; }
-
-            Vector3 averagelocation = tankLocationSum / tanksInPlatoon.Length;
-            return averagelocation;
-        }
-
         private bool PlatoonHasRegrouped()
         {
-            TankController[] tanksInPlatoon = Object.FindObjectsOfType<TankController>();
+            List<GameObject> tanksInPlatoon = _tankController.platoonController.getAliveTanks();
             foreach (var tank in tanksInPlatoon)
             {
                 NavMeshAgent navMeshAgent = tank.gameObject.GetComponent<NavMeshAgent>();

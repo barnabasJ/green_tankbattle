@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DefaultNamespace;
+using Green;
 using GreenStateMachine;
 using UnityEngine;
 using UnityEngine.AI;

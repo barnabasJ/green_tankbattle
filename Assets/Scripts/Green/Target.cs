@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.AI;
 
 namespace Green
@@ -7,9 +8,9 @@ namespace Green
     {
         public void UpdateTargets ( Vector3 targetPosition  )
         {
-            if (!(Object.FindObjectsOfType(typeof(NavMeshAgent)) is NavMeshAgent[] navAgents)) return;
-            foreach (NavMeshAgent agent in navAgents) {
-                agent.destination = targetPosition;
+            List<GameObject> tanks = new List<GameObject>(GameObject.FindGameObjectsWithTag("GreenTank"));
+            foreach (var tank in tanks) {
+                tank.GetComponent<NavMeshAgent>().destination = targetPosition;
             }
         }
     }

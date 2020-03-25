@@ -301,9 +301,10 @@ GameObject:
   - component: {fileID: 341244769}
   - component: {fileID: 341244768}
   - component: {fileID: 341244767}
+  - component: {fileID: 341244772}
   m_Layer: 0
   m_Name: Tank (4)
-  m_TagString: Untagged
+  m_TagString: GreenTank
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -410,6 +411,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0.000030517578, y: -90, z: 0}
+--- !u!114 &341244772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 341244766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebc7b84202dc4f89af9412627e3debad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bullet: {fileID: 0}
 --- !u!1 &399295351
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,9 +614,10 @@ GameObject:
   - component: {fileID: 519483308}
   - component: {fileID: 519483307}
   - component: {fileID: 519483306}
+  - component: {fileID: 519483311}
   m_Layer: 0
   m_Name: Tank (3)
-  m_TagString: Untagged
+  m_TagString: GreenTank
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -709,6 +724,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0.000030517578, y: -90, z: 0}
+--- !u!114 &519483311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519483305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebc7b84202dc4f89af9412627e3debad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bullet: {fileID: 0}
 --- !u!1 &567819061
 GameObject:
   m_ObjectHideFlags: 0
@@ -2416,9 +2444,10 @@ GameObject:
   - component: {fileID: 1620425306}
   - component: {fileID: 1620425305}
   - component: {fileID: 1620425304}
+  - component: {fileID: 1620425309}
   m_Layer: 0
   m_Name: Tank (2)
-  m_TagString: Untagged
+  m_TagString: GreenTank
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2525,6 +2554,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0.000030517578, y: -90, z: 0}
+--- !u!114 &1620425309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1620425303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebc7b84202dc4f89af9412627e3debad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Bullet: {fileID: 0}
 --- !u!1 &1686783363
 GameObject:
   m_ObjectHideFlags: 0

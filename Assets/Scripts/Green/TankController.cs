@@ -61,7 +61,6 @@ namespace Green
 
         protected void Update()
         {
-            Debug.Log("Update");
             // Solution or now to set the initial state
             if (!IsFirstStateSet) {
                 stateMachine.transition(TankState.PATROLLING);
