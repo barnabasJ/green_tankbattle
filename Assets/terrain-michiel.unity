@@ -1127,7 +1127,6 @@ GameObject:
   - component: {fileID: 867211586}
   - component: {fileID: 867211585}
   - component: {fileID: 867211584}
-  - component: {fileID: 867211583}
   m_Layer: 0
   m_Name: Destpoint
   m_TagString: Untagged
@@ -1135,19 +1134,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &867211583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 867211582}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e98335b0994c80e47b748ade78158963, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetMarker: {fileID: 867211587}
 --- !u!23 &867211584
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2947,7 +2933,7 @@ GameObject:
   - component: {fileID: 1897313173}
   m_Layer: 0
   m_Name: PlatoonController
-  m_TagString: Untagged
+  m_TagString: PlatoonController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2961,7 +2947,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1897313172}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 14869b5a68834237b8455d20da019499, type: 3}
+  m_Script: {fileID: 11500000, guid: f167427649a74e398bfa5fc2f9219909, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &1897313174

@@ -16,6 +16,7 @@ namespace GreenStateMachine
 
         public T? act()
         {
+            
             return currentState.act();
         }
 

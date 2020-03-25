@@ -61,7 +61,7 @@ namespace Green
 
         protected void Update()
         {
-            
+            Debug.Log("Update");
             // Solution or now to set the initial state
             if (!IsFirstStateSet) {
                 stateMachine.transition(TankState.PATROLLING);
@@ -96,7 +96,7 @@ namespace Green
         void OnCollisionEnter(Collision collision)
         {
             //Reduce health
-            if (collision.gameObject.tag == "Bullet")
+            if (collision.gameObject.CompareTag("Bullet"))
             {
                 health -= 5;
                 Debug.Log("Tank health: " + health);
