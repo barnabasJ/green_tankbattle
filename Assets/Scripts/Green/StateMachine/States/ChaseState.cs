@@ -11,7 +11,7 @@ public class ChaseState : State<TankState>
     private GameObject targetEnemy;
         public ChaseState(GameObject gameObject, TankController tankcontroller) : base(gameObject)
         {
-            target = Object.FindObjectOfType<Target>();
+            target = new Target();
             this.tankController = tankController;
         }
 

@@ -6,11 +6,12 @@ namespace Green
 {
     public enum TankState
     {
-        PATROLING,
+        PATROLLING,
         CHASE,
         EVADING,
         FLEE,
         DEAD,
+        REGROUPING,
     }
 
     public class TankController : MonoBehaviour
@@ -26,7 +27,10 @@ namespace Green
         private float maxForwardSpeed = 300.0f;
         private float maxBackwardSpeed = -300.0f;
         private StateMachine<TankState> stateMachine;
-        private IPlatoonController platoonController;
+        public IPlatoonController platoonController;
+
+        // Solution or now to set the initial state
+        private bool IsFirstStateSet = false;
 
         //Initialize the Finite state machine for the NPC tank
         protected void Awake()
@@ -47,21 +51,27 @@ namespace Green
 
             var stateMap = new Dictionary<TankState, State<TankState>>
             {
-                {TankState.PATROLING, new PatrolState(gameObject, this)},
-                {TankState.CHASE, new ChaseState(gameObject, this)}
+                {TankState.PATROLLING, new PatrolState(gameObject, this)},
+                {TankState.CHASE,  new ChaseState(gameObject, this)},
+                {TankState.REGROUPING, new RegroupState(gameObject, this)}
             };
 
             stateMachine = new StateMachine<TankState>(stateMap);
         }
 
-        //Update each frame
         protected void Update()
         {
+            // Solution or now to set the initial state
+            if (!IsFirstStateSet) {
+                stateMachine.transition(TankState.PATROLLING);
+                IsFirstStateSet = false;
+            }
+            
             if (EnemyPowerIsLow())
             {
                 stateMachine.transition(TankState.CHASE);
             }
-
+            
             stateMachine.transition(stateMachine.act());
         }
 
@@ -85,7 +95,7 @@ namespace Green
         void OnCollisionEnter(Collision collision)
         {
             //Reduce health
-            if (collision.gameObject.tag == "Bullet")
+            if (collision.gameObject.CompareTag("Bullet"))
             {
                 health -= 5;
                 Debug.Log("Tank health: " + health);
