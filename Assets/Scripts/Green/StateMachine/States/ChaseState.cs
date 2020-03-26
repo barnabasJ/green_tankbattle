@@ -9,6 +9,7 @@ public class ChaseState : State<TankState>
     private TankController tankController;
     private Target target;
     private Collider targetEnemy;
+    public List<Collider> spottedEnemies;
         public ChaseState(GameObject gameObject, TankController tankController) : base(gameObject)
         {
             this.tankController = tankController;
@@ -18,10 +19,10 @@ public class ChaseState : State<TankState>
         // when enter this state, get the current enemy that the group is chasing
         public override void onStateEnter()
         {
-            List<Collider> enemiesSpotted = tankController.EnemiesInAttackRange();
-            if ( enemiesSpotted.Count > 0)
+            spottedEnemies = tankController.EnemiesInAttackRange();
+            if ( spottedEnemies.Count > 0)
             {
-                this.targetEnemy = enemiesSpotted[0];
+                this.targetEnemy = spottedEnemies[0];
             }
             
         }
@@ -31,7 +32,9 @@ public class ChaseState : State<TankState>
         }
 
         public override TankState? act(){
-            target.UpdateTargets(targetEnemy.transform.position);
+            if(spottedEnemies.Count > 0) {
+                target.UpdateTargets(targetEnemy.gameObject.transform.position);
+            }
             return null;
         }
 }
