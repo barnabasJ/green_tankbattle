@@ -18,6 +18,17 @@ namespace Green
             _tankController = tankController;
         }
 
+
+        public override void onStateEnter()
+        {
+            _tankController.Start();
+        }
+
+        public override void onStateExit()
+        {
+            _tankController.Stop();
+        }
+
         public override TankState? act()
         {
             if (PlatoonHasRegrouped()) return TankState.PATROLLING;

@@ -33,9 +33,15 @@ namespace Green
             _currentWayPointIndex = 0;
         }
 
+
         public override void onStateEnter()
         {
-            target.UpdateTargets(_wayPoints[_currentWayPointIndex]);
+            _tankController.Start();
+        }
+
+        public override void onStateExit()
+        {
+            _tankController.Stop();
         }
 
         public override TankState? act()
@@ -48,16 +54,8 @@ namespace Green
 
         private void OrderToPatrolTowardsNextWayPoint()
         {
-            if (_currentWayPointIndex >= _wayPoints.Length - 1)
-            {
-                _currentWayPointIndex = 0;
-            }
-            else
-            {
-                _currentWayPointIndex++;
-            }
-
-            target.UpdateTargets(_wayPoints[_currentWayPointIndex]);
+            _currentWayPointIndex = (_currentWayPointIndex + 1) % _wayPoints.Length;
+            _tankController.GetComponent<NavMeshAgent>().destination = _wayPoints[_currentWayPointIndex];
         }
 
         private bool PlatoonHasReachedItsDestination()

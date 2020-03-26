@@ -5,38 +5,50 @@ using UnityEngine;
 using Green;
 using UnityEngine.AI;
 
-public class ChaseState : State<TankState>
+namespace Green
 {
-    private TankController tankController;
-
-    public ChaseState(GameObject gameObject, TankController tankController) : base(gameObject)
+    public class ChaseState : State<TankState>
     {
-        this.tankController = tankController;
-    }
+        private TankController tankController;
 
+        public ChaseState(GameObject gameObject, TankController tankController) : base(gameObject)
+        {
+            this.tankController = tankController;
+        }
+        
+        public override void onStateEnter()
+        {
+            tankController.Start();
+        }
 
-    public override TankState? act()
-    {
-        var target = tankController.platoonController.getEnemyTarget();
+        public override void onStateExit()
+        {
+            tankController.Stop();
+        }
 
-        // no targets -> regroup
-        if (target == null)
-            return TankState.REGROUPING;
+        public override TankState? act()
+        {
+            var target = tankController.platoonController.getEnemyTarget();
 
-        // enemies in attackRange -> attack 
-        if (tankController.EnemiesInAttackRange().Count > 0)
-            return TankState.ATTACKING;
+            // no targets -> regroup
+            if (target == null)
+                return TankState.REGROUPING;
 
-        // calculate the nearest position in the middle of the attack range
-        var directionFromEnemyToPlayer = (tankController.transform.position -
-                                          target.transform.position)
-            .normalized;
+            // enemies in attackRange -> attack 
+            if (tankController.EnemiesInAttackRange().Count > 0)
+                return TankState.ATTACKING;
 
-        var dest = target.transform.position + directionFromEnemyToPlayer *
-            (tankController.maxAttackRange - tankController.minAttackRange);
+            // calculate the nearest position in the middle of the attack range
+            var directionFromEnemyToPlayer = (tankController.transform.position -
+                                              target.transform.position)
+                .normalized;
 
-        // move towards it 
-        tankController.GetComponent<NavMeshAgent>().destination = dest;
-        return null;
+            var dest = target.transform.position + directionFromEnemyToPlayer *
+                (tankController.maxAttackRange - tankController.minAttackRange);
+
+            // move towards it 
+            tankController.GetComponent<NavMeshAgent>().destination = dest;
+            return null;
+        }
     }
 }

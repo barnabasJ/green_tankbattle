@@ -33,17 +33,17 @@ namespace Green
         public float curSpeed { get; private set; }
         public float targetSpeed { get; private set; }
         public float rotSpeed { get; private set; }
-        public float turretRotSpeed { get; private set; } = 10.0f;
-        public float maxForwardSpeed { get; private set; } = 300.0f;
-        public float maxBackwardSpeed { get; private set; } = -300.0f;
-        public float minAttackRange { get; private set; } = 50f;
-        public float maxAttackRange { get; private set; } = 300f;
-        public float spottingDistace { get; private set; } = 500f;
-        public float shootRate { get; private set; } = 3.0f;
+        public float turretRotSpeed { get; } = 10.0f;
+        public float maxForwardSpeed { get; } = 300.0f;
+        public float maxBackwardSpeed { get; } = -300.0f;
+        public float minAttackRange { get; } = 50f;
+        public float maxAttackRange { get; } = 300f;
+        public float spottingDistace { get; } = 500f;
+        public float shootRate { get; } = 3.0f;
 
         // stuff needed for logic 
         private float elapsedTime;
-        private float evadeDistance = 10f;
+        public float evadeDistance { get; } = 10f;
 
         //Initialize the Finite state machine for the NPC tank
         protected void Awake()
@@ -90,23 +90,6 @@ namespace Green
             stateMachine.transition(stateMachine.act());
         }
 
-
-        // when the platoon spot an enemy, compare the enemy power to the platoon power
-        // if enemy power higher, switch to flee
-        // if enemy power lower, switch to chase
-        // TODO: Write check enemy power function
-        bool EnemyPowerIsLow()
-        {
-            return false;
-        }
-
-        // return an enemy who is up for kill
-        public GameObject CurrentChaseEnemy()
-        {
-            return null;
-        }
-
-
         void OnCollisionEnter(Collision collision)
         {
             //Reduce health
@@ -123,6 +106,16 @@ namespace Green
                     stateMachine.transition(TankState.DEAD);
                 }
             }
+        }
+
+        public void Start()
+        {
+            GetComponent<NavMeshAgent>().isStopped = false;
+        }
+
+        public void Stop()
+        {
+            GetComponent<NavMeshAgent>().isStopped = true;
         }
 
         public bool Aim(GameObject target, float interceptorSpeed)
@@ -222,7 +215,7 @@ namespace Green
 
         private bool isOtherTank(Collider collider)
         {
-            return collider.gameObject != gameObject && collider.gameObject.GetComponent<NavMeshAgent>() != null;
+            return !collider.gameObject.Equals(gameObject) && collider.gameObject.GetComponent<NavMeshAgent>() != null;
         }
 
         private bool isEnemyTank(Collider collider)
