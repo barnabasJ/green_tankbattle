@@ -13,7 +13,7 @@ namespace Green
     {
         private List<GameObject> aliveTanks = new List<GameObject>();
         private Vector3 platoonMeanPosition;
-        private List<GameObject> spottedEnemies = new List<GameObject>();
+        private HashSet<GameObject> spottedEnemies = new HashSet<GameObject>();
         private List<GameObject> targets = new List<GameObject>();
         private List<GameObject> tanks = new List<GameObject>();
 
@@ -55,7 +55,7 @@ namespace Green
         {
             targets = new List<GameObject>(spottedEnemies);
             targets.Sort(new TargetComparer(platoonMeanPosition));
-            spottedEnemies = new List<GameObject>();
+            spottedEnemies = new HashSet<GameObject>();
         }
 
         private void calcAliveTanks()
