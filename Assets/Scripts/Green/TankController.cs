@@ -72,11 +72,16 @@ namespace Green
             };
 
             stateMachine = new StateMachine<TankState>(stateMap);
-            stateMachine.transition(TankState.ATTACKING);
+            stateMachine.transition(TankState.PATROLLING);
         }
 
         protected void Update()
         {
+            foreach (var enemyCollider in SpottedEnemies())
+            {
+               platoonController.enemySpotted(enemyCollider.gameObject); 
+            }
+
             stateMachine.transition(stateMachine.act());
         }
 
