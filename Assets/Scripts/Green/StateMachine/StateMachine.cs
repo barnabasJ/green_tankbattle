@@ -16,7 +16,7 @@ namespace GreenStateMachine
 
         public T? act()
         {
-            
+            Debug.Log("current state: " + currentState + " acting");    
             return currentState.act();
         }
 
