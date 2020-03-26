@@ -7,11 +7,11 @@ using Green;
 public class ChaseState : State<TankState>
 {
     private TankController tankController;
-    private Target target;
+    private Green_Target target;
     private GameObject targetEnemy;
         public ChaseState(GameObject gameObject, TankController tankCtrl) : base(gameObject)
         {
-            target = Object.FindObjectOfType<Target>();
+            target = Object.FindObjectOfType<Green_Target>();
             this.tankController = tankCtrl;
         }
 
