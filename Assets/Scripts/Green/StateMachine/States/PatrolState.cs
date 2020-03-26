@@ -48,9 +48,8 @@ namespace Green
         }
 
         private bool EnemiesAreInSight()
-        { 
-            return false;
-            //return _tankController.platoonController.getCurrentEnemyCount() > 0;
+        {
+            return _tankController.SpottedEnemies().Count > 0;
         }
 
         private void OrderToPatrolTowardsNextWayPoint()
