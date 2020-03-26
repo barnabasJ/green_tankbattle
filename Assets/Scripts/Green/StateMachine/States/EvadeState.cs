@@ -22,32 +22,30 @@ namespace Green
 
         public override TankState? act()
         {
-            evadeDir = gameObject.transform.forward;
+            var tanks = tankController.tanksInCrashDistance(evadeRadius);
 
-            // Looks for objects around this tank.
-            hitInfo = Physics.SphereCastAll(gameObject.transform.position, evadeRadius, gameObject.transform.forward);
+            if (tanks.Count <= 0) return TankState.REGROUPING;
 
-            foreach (RaycastHit hit in hitInfo)
+            foreach (var tank in tanks)
             {
                 // Evades friendly tanks.
-                if (hit.transform.GetComponent<NavMeshAgent>() != null)
+                if (tank.transform.GetComponent<NavMeshAgent>() != null)
                 {
-                    Vector3 dir = (hit.transform.position - gameObject.transform.position).normalized;
+                    Vector3 dir = (tank.transform.position - gameObject.transform.position).normalized;
 
                     if (dir.z >= 0)
                         continue;
 
                     // The weight is inversely related to how close this tank is the other tank.
-                    float weight = Mathf.InverseLerp(0f, evadeRadius, (hit.transform.position - gameObject.transform.position).magnitude);
+                    float weight = Mathf.InverseLerp(0f, evadeRadius,
+                        (tank.transform.position - gameObject.transform.position).magnitude);
                     evadeDir += new Vector3(dir.x * -1f, dir.y, dir.z) * weight;
                 }
             }
 
             evadeDir.Normalize();
-
-
-            // Should go into regroup or flee.
-            return TankState.PATROLLING;
+            tankController.GetComponent<NavMeshAgent>().destination = evadeDir * 10f;
+            return null;
         }
     }
 }
