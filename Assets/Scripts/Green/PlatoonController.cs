@@ -88,6 +88,8 @@ namespace Green
 
             // calc enemy info
             calcTarget();
+            
+            Debug.Log(this.spottedEnemies);
         }
     }
 
