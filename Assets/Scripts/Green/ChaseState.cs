@@ -9,10 +9,10 @@ public class ChaseState : State<TankState>
     private TankController tankController;
     private Target target;
     private GameObject targetEnemy;
-        public ChaseState(GameObject gameObject, TankController tankcontroller) : base(gameObject)
+        public ChaseState(GameObject gameObject, TankController tankCtrl) : base(gameObject)
         {
             target = Object.FindObjectOfType<Target>();
-            this.tankController = tankController;
+            this.tankController = tankCtrl;
         }
 
         // when enter this state, get the current enemy that the group is chasing
