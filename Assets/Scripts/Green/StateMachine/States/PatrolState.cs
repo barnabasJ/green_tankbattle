@@ -40,17 +40,11 @@ namespace Green
 
         public override TankState? act()
         {
+            if (_tankController.SpottedEnemies().Count > 0) return TankState.CHASE;
             if(PlatoonHasReachedItsDestination()) OrderToPatrolTowardsNextWayPoint();
-
-            if (EnemiesAreInSight()) return TankState.CHASE;
-            
             return null;
         }
 
-        private bool EnemiesAreInSight()
-        {
-            return _tankController.SpottedEnemies().Count > 0;
-        }
 
         private void OrderToPatrolTowardsNextWayPoint()
         {
