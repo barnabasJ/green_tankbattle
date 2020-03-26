@@ -36,7 +36,7 @@ namespace Green
         public float turretRotSpeed { get; private set; } = 10.0f;
         public float maxForwardSpeed { get; private set; } = 300.0f;
         public float maxBackwardSpeed { get; private set; } = -300.0f;
-        public float minAttackRange { get; private set; } = 100f;
+        public float minAttackRange { get; private set; } = 50f;
         public float maxAttackRange { get; private set; } = 300f;
         public float spottingDistace { get; private set; } = 500f;
         public float shootRate { get; private set; } = 3.0f;
@@ -72,7 +72,7 @@ namespace Green
             };
 
             stateMachine = new StateMachine<TankState>(stateMap);
-            stateMachine.transition(TankState.PATROLLING);
+            stateMachine.transition(TankState.ATTACKING);
         }
 
         protected void Update()
