@@ -28,6 +28,7 @@ namespace Green
         public override TankState? act()
         {
             tankController.Shoot();
+            
             // no more enemies around -> regroup
             if (platoonController.getCurrentTargets().Count <= 0)
             {
@@ -56,7 +57,7 @@ namespace Green
             }
 
             return null;
-        }lf
+        }
 
         //Moves the tank around with the goal of dodging incoming bullets
         public void dodgeAttacks()

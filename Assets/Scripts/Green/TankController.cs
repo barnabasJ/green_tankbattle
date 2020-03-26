@@ -126,6 +126,8 @@ namespace Green
                 return true;
 
             // TODO: rotate the turret
+            Quaternion lookRotation = Quaternion.LookRotation((Vector3) aimPostion);
+            turret.transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turretRotSpeed);
             return false;
         }
 
@@ -133,6 +135,7 @@ namespace Green
         {
             Vector3 targetPosition = target.transform.position;
             Vector3 targetSpeed = target.GetComponent<Rigidbody>().velocity;
+            
             //Set target direction
             Vector3 targetDir = targetPosition - transform.position;
 
