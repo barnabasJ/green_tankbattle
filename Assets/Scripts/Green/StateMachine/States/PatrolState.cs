@@ -47,32 +47,23 @@ namespace Green
         public override TankState? act()
         {
             if (_tankController.platoonController.getEnemyTarget() != null) return TankState.CHASE;
-            if (PlatoonHasReachedItsDestination()) OrderToPatrolTowardsNextWayPoint();
+            if (PlatoonHasReachedItsDestination())
+                _currentWayPointIndex = (_currentWayPointIndex + 1) % _wayPoints.Length;
+            _tankController.GetComponent<NavMeshAgent>().destination = _wayPoints[_currentWayPointIndex];
             return null;
         }
 
 
         private void OrderToPatrolTowardsNextWayPoint()
         {
-            _currentWayPointIndex = (_currentWayPointIndex + 1) % _wayPoints.Length;
-            _tankController.GetComponent<NavMeshAgent>().destination = _wayPoints[_currentWayPointIndex];
         }
 
         private bool PlatoonHasReachedItsDestination()
         {
-            TankController[] tanksInPlatoon = Object.FindObjectsOfType<TankController>();
-
             // Here we check if all tanks in the platoon are close enough towards the current waypoint.
             // If one tank is not close enough this function will return false.  
-            foreach (TankController tank in tanksInPlatoon)
-            {
-                NavMeshAgent navMeshAgent = tank.gameObject.GetComponent<NavMeshAgent>();
-                float distanceTowardsDestination = Vector3.Distance(tank.gameObject.transform.position,
-                    _wayPoints[_currentWayPointIndex]);
-                if (distanceTowardsDestination > navMeshAgent.stoppingDistance) return false;
-            }
-
-            return true;
+            return Vector3.Distance(gameObject.transform.position, _wayPoints[_currentWayPointIndex]) <=
+                   gameObject.GetComponent<NavMeshAgent>().stoppingDistance + 1;
         }
     }
 }
