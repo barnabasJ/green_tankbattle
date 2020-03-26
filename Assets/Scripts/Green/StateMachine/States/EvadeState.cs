@@ -47,7 +47,7 @@ namespace Green
 
 
             // Should go into regroup or flee.
-            return TankState.PATROLING;
+            return TankState.PATROLLING;
         }
     }
 }

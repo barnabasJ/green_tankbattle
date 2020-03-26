@@ -9,12 +9,13 @@ namespace Green
 {
     public enum TankState
     {
-        PATROLING,
+        PATROLLING,
         CHASE,
         EVADING,
         FLEE,
         DEAD,
         ATTACKING,
+        REGROUPING,
     }
 
     public class TankController : MonoBehaviour
@@ -61,19 +62,19 @@ namespace Green
 
             var stateMap = new Dictionary<TankState, State<TankState>>
             {
-                {TankState.PATROLING, new PatrolState(gameObject, this)},
+                {TankState.PATROLLING, new PatrolState(gameObject, this)},
                 {TankState.CHASE, new ChaseState(gameObject, this)},
                 {
                     TankState.ATTACKING,
                     new AttackState(gameObject, this)
-                }
+                },
+                {TankState.REGROUPING, new RegroupState(gameObject, this)}
             };
 
             stateMachine = new StateMachine<TankState>(stateMap);
             stateMachine.transition(TankState.ATTACKING);
         }
 
-        //Update each frame
         protected void Update()
         {
             stateMachine.transition(stateMachine.act());
@@ -99,7 +100,7 @@ namespace Green
         void OnCollisionEnter(Collision collision)
         {
             //Reduce health
-            if (collision.gameObject.tag == "Bullet")
+            if (collision.gameObject.CompareTag("Bullet"))
             {
                 health -= 5;
                 Debug.Log("Tank health: " + health);

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using GreenStateMachine;
 using UnityEngine;
 
 namespace GreenStateMachine
@@ -17,6 +16,7 @@ namespace GreenStateMachine
 
         public T? act()
         {
+            
             return currentState.act();
         }
 

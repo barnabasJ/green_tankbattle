@@ -21,14 +21,12 @@ namespace Green
         public void Awake()
         {
             // Find all tanks from the GreenPlatoon
-            tanks = new List<GameObject>(GameObject.FindGameObjectsWithTag("GreenTanks"));
+            tanks = new List<GameObject>(GameObject.FindGameObjectsWithTag("GreenTank"));
         }
 
         public GameObject getEnemyTarget()
         {
-            if (targets.Count > 0)
-                return targets[0];
-            return null;
+            return targets.Count > 0 ? targets[0] : null;
         }
 
         public List<GameObject> getCurrentTargets()

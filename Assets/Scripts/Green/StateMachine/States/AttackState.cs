@@ -32,7 +32,7 @@ namespace Green
             // no more enemies around -> regroup
             if (platoonController.getCurrentTargets().Count <= 0)
             {
-                return TankState.PATROLING; // should probably be regroup;
+                return TankState.REGROUPING;
             }
 
             // enemies are are around but not in attack range -> chase
