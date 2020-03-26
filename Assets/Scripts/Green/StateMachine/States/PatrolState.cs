@@ -48,7 +48,7 @@ namespace Green
         }
 
         private bool EnemiesAreInSight()
-        {
+        { 
             return false;
             //return _tankController.platoonController.getCurrentEnemyCount() > 0;
         }
