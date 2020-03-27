@@ -14,6 +14,7 @@ namespace Green
         private GameObject currentTarget;
         protected float elapsedTime;
         private float shootRate;
+        private GameObject tank;
 
         private Transform bulletSpawnPoint;
         private Transform turret;
@@ -22,6 +23,7 @@ namespace Green
         public AttackState(GameObject gameObject, TankController tankController) : base(gameObject)
         {
             this.tankController = tankController;
+            this.tank = gameObject;
             this.platoonController = tankController.platoonController;
         }
 
@@ -42,13 +44,10 @@ namespace Green
                 return TankState.CHASE;
             }
 
-            // Flee is handled in the tankcontroller because it's connect to health
-            // and more of an overarching problem
-
-
             // aim and if target is locked -> shoot
-            if (tankController.Aim(platoonController.getEnemyTarget(), 10f))
+            if (tankController.Aim(platoonController.getEnemyTarget()))
             {
+                Debug.Log("Target in sights");
                 // if enough time to execute a dodge maneuver -> do it
                 if (tankController.Shoot() > 2.0f)
                 {
@@ -62,6 +61,8 @@ namespace Green
         //Moves the tank around with the goal of dodging incoming bullets
         public void dodgeAttacks()
         {
+            Debug.Log("Moving forwards");
+            gameObject.transform.position += gameObject.transform.forward * Time.deltaTime * tankController.maxForwardSpeed;
         }
     }
 }

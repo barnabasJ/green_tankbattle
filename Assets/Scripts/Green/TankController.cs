@@ -118,25 +118,33 @@ namespace Green
             GetComponent<NavMeshAgent>().isStopped = true;
         }
 
-        public bool Aim(GameObject target, float interceptorSpeed)
+        public bool Aim(GameObject target)
         {
-            var aimPostion = calAimPosition(target, interceptorSpeed);
-            // can't aim at target 
-            if (aimPostion == null)
-                return false;
-
-            // aiming correctly
-            if (bulletSpawnPoint.transform.position == aimPostion)
+            float angle = 10;
+            if  ( Vector3.Angle(turret.transform.forward, transform.position - turret.transform.position) < angle)
+            {
                 return true;
+            }
+            
+            // Determine which direction to rotate towards
+            Vector3 targetDirection = target.transform.position - transform.position;
 
-            // TODO: rotate the turret
-            Quaternion lookRotation = Quaternion.LookRotation((Vector3) aimPostion);
-            turret.transform.rotation =
-                Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turretRotSpeed);
+            // The step size is equal to speed times frame time.
+            float singleStep = rotSpeed * Time.deltaTime;
+
+            // Rotate the forward vector towards the target direction by one step
+            Vector3 newDirection = Vector3.RotateTowards(turret.transform.forward, targetDirection, singleStep, 0.0f);
+
+            // Draw a ray pointing at our target in
+            Debug.DrawRay(transform.position, newDirection, Color.red);
+
+            // Calculate a rotation a step closer to the target and applies rotation to this object
+            turret.transform.rotation = Quaternion.LookRotation(newDirection);
+            
             return false;
         }
 
-        private Vector3? calAimPosition(GameObject target, float aInterceptorSpeed)
+        /*private Vector3? calAimPosition(GameObject target, float aInterceptorSpeed)
         {
             Vector3 targetPosition = target.transform.position;
             Vector3 targetSpeed = target.GetComponent<Rigidbody>().velocity;
@@ -171,7 +179,7 @@ namespace Green
                 return (S2) * targetDir + targetSpeed;
             else
                 return (S1) * targetDir + targetSpeed;
-        }
+        }*/
 
         /// <summary>
         /// Shots a bullet if enough time is elapsed
