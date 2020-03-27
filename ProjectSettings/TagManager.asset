@@ -6,7 +6,6 @@ TagManager:
   tags:
   - GreenTank
   - Bullet
-  - PlatoonController
   - GreenPlatoonController
   layers:
   - Default
