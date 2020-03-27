@@ -31,8 +31,7 @@ namespace Green
             _wayPoints = Object.FindObjectOfType<PatrollingWayPoints>().GetComponent<PatrollingWayPoints>().wayPoints;
             _currentWayPointIndex = 0;
         }
-
-
+        
         public override void onStateEnter()
         {
             _tankController.Start();
@@ -52,7 +51,6 @@ namespace Green
             _tankController.GetComponent<NavMeshAgent>().destination = _wayPoints[_currentWayPointIndex];
             return null;
         }
-
 
         private void OrderToPatrolTowardsNextWayPoint()
         {
