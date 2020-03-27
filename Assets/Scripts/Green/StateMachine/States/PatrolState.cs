@@ -55,13 +55,20 @@ namespace Green
         private void OrderToPatrolTowardsNextWayPoint()
         {
         }
-
+        
         private bool PlatoonHasReachedItsDestination()
         {
             // Here we check if all tanks in the platoon are close enough towards the current waypoint.
             // If one tank is not close enough this function will return false.  
-            return Vector3.Distance(gameObject.transform.position, _wayPoints[_currentWayPointIndex]) <=
-                   gameObject.GetComponent<NavMeshAgent>().stoppingDistance + 1;
+            List<GameObject> aliveTanks = _tankController.platoonController.getAliveTanks();
+            foreach (var tank in aliveTanks) {
+                float distanceTowardsWaypoint =
+                    Vector3.Distance(tank.gameObject.transform.position, _wayPoints[_currentWayPointIndex]);
+                float stoppingDistance = tank.gameObject.GetComponent<NavMeshAgent>().stoppingDistance;
+                if (distanceTowardsWaypoint > stoppingDistance) return false;
+            }
+
+            return true;
         }
     }
 }
