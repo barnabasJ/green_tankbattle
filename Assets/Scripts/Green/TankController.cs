@@ -26,7 +26,7 @@ namespace Green
         private Transform bulletSpawnPoint;
 
         private StateMachine<TankState> stateMachine;
-        public IPlatoonController platoonController { get; private set; }
+        public PlatoonController platoonController { get; private set; }
 
         // config
         public int health { get; private set; }
@@ -58,7 +58,7 @@ namespace Green
             bulletSpawnPoint = turret.GetChild(0).transform;
 
             platoonController =
-                GameObject.FindWithTag("GreenPlatoonController").GetComponent<IPlatoonController>();
+                GameObject.FindWithTag("GreenPlatoonController").GetComponent<PlatoonController>();
 
             var stateMap = new Dictionary<TankState, State<TankState>>
             {
@@ -85,23 +85,11 @@ namespace Green
             stateMachine.transition(stateMachine.act());
         }
 
-
         // when the platoon spot an enemy, compare the enemy power to the platoon power
         // if enemy power higher, switch to flee
         // if enemy power lower, switch to chase
         // TODO: Write check enemy power function
-        bool EnemyPowerIsLow()
-        {
-            return false;
-        }
-
-        // return an enemy who is up for kill
-        public GameObject CurrentChaseEnemy()
-        {
-            return null;
-        }
-
-
+        
         void OnCollisionEnter(Collision collision)
         {
             //Reduce health
@@ -230,6 +218,16 @@ namespace Green
             }
 
             return objects;
+        }
+
+        // return the mean  position of all enemy tanks in the vicinity, used for chasing or fleeing
+        public Vector3 EnemyMeanPosition() {
+            List<Collider> spottedEnemies = SpottedEnemies();
+            Vector3 sumPosition = new Vector3(0,0,0);
+            foreach(Collider enemy in spottedEnemies) {
+                sumPosition += enemy.gameObject.transform.position;
+            }
+            return sumPosition/spottedEnemies.Count;
         }
     }
 }
