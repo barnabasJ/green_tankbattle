@@ -46,9 +46,6 @@ namespace Green
         public override TankState? act()
         {
             if (_tankController.platoonController.getEnemyTarget() != null) return TankState.CHASE;
-            if (Vector3.Distance(gameObject.transform.position,
-                _tankController.platoonController.getPlatoonMeanPosition()) > 50f)
-                return TankState.REGROUPING;
 
             if (PlatoonHasReachedItsDestination())
                 _currentWayPointIndex = (_currentWayPointIndex + 1) % _wayPoints.Length;

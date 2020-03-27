@@ -216,6 +216,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlatoonController
       objectReference: {fileID: 0}
+    - target: {fileID: 4334686043600396856, guid: c098200a566d93f489c6239b99d41494,
+        type: 3}
+      propertyPath: m_TagString
+      value: GreenPlatoonController
+      objectReference: {fileID: 0}
     - target: {fileID: 4334686043600396858, guid: c098200a566d93f489c6239b99d41494,
         type: 3}
       propertyPath: m_LocalPosition.x
