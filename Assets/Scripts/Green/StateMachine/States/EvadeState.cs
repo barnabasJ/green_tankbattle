@@ -11,43 +11,46 @@ namespace Green
         private TankController tankController;
 
         private RaycastHit[] hitInfo;
-        private float evadeRadius = 25f;
-
-        private Vector3 evadeDir;
+        private float evadeRadius;
 
         public EvadeState(GameObject givenGameObject, TankController givenTankController) : base(givenGameObject)
         {
             tankController = givenTankController;
+            evadeRadius = tankController.evadeDistance;
+        }
+
+        public override void onStateEnter()
+        {
+            tankController.Start();
+        }
+
+        public override void onStateExit()
+        {
+            tankController.Stop();
         }
 
         public override TankState? act()
         {
-            evadeDir = gameObject.transform.forward;
+            var tanks = tankController.tanksInCrashDistance(evadeRadius);
 
-            // Looks for objects around this tank.
-            hitInfo = Physics.SphereCastAll(gameObject.transform.position, evadeRadius, gameObject.transform.forward);
+            if (tanks.Count <= 0) return TankState.REGROUPING;
 
-            foreach (RaycastHit hit in hitInfo)
+            var evadeDir = Vector3.zero;
+            foreach (var tank in tanks)
             {
-                // Evades friendly tanks.
-                if (hit.transform.GetComponent<NavMeshAgent>() != null)
-                {
-                    Vector3 dir = (hit.transform.position - gameObject.transform.position).normalized;
+                Vector3 dir = (gameObject.transform.position - tank.transform.position).normalized;
 
-                    if (dir.z >= 0)
-                        continue;
-
-                    // The weight is inversely related to how close this tank is the other tank.
-                    float weight = Mathf.InverseLerp(0f, evadeRadius, (hit.transform.position - gameObject.transform.position).magnitude);
-                    evadeDir += new Vector3(dir.x * -1f, dir.y, dir.z) * weight;
-                }
+                // The weight is inversely related to how close this tank is the other tank.
+                float weight = Mathf.InverseLerp(0f, evadeRadius,
+                    (tank.transform.position - gameObject.transform.position).magnitude);
+                evadeDir += dir * weight;
             }
 
             evadeDir.Normalize();
-
-
-            // Should go into regroup or flee.
-            return TankState.PATROLLING;
+            tankController.GetComponent<NavMeshAgent>().destination =
+                gameObject.transform.position +
+                evadeDir * (evadeRadius + tankController.GetComponent<NavMeshAgent>().stoppingDistance + 10);
+            return null;
         }
     }
 }

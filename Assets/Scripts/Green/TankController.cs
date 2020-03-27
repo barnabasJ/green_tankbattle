@@ -33,16 +33,17 @@ namespace Green
         public float curSpeed { get; private set; }
         public float targetSpeed { get; private set; }
         public float rotSpeed { get; private set; }
-        public float turretRotSpeed { get; private set; } = 10.0f;
-        public float maxForwardSpeed { get; private set; } = 300.0f;
-        public float maxBackwardSpeed { get; private set; } = -300.0f;
-        public float minAttackRange { get; private set; } = 100f;
-        public float maxAttackRange { get; private set; } = 300f;
-        public float spottingDistace { get; private set; } = 500f;
-        public float shootRate { get; private set; } = 3.0f;
+        public float turretRotSpeed { get; } = 10.0f;
+        public float maxForwardSpeed { get; } = 300.0f;
+        public float maxBackwardSpeed { get; } = -300.0f;
+        public float minAttackRange { get; } = 50f;
+        public float maxAttackRange { get; } = 300f;
+        public float spottingDistace { get; } = 500f;
+        public float shootRate { get; } = 3.0f;
 
         // stuff needed for logic 
         private float elapsedTime;
+        public float evadeDistance { get; } = 10f;
 
         //Initialize the Finite state machine for the NPC tank
         protected void Awake()
@@ -68,28 +69,27 @@ namespace Green
                     TankState.ATTACKING,
                     new AttackState(gameObject, this)
                 },
+                {TankState.EVADING, new EvadeState(gameObject, this)},
                 {TankState.REGROUPING, new RegroupState(gameObject, this)}
             };
 
             stateMachine = new StateMachine<TankState>(stateMap);
-            stateMachine.transition(TankState.PATROLLING);
+            stateMachine.transition(TankState.ATTACKING);
         }
 
         protected void Update()
         {
+            if (tanksInCrashDistance(evadeDistance).Count > 0)
+                stateMachine.transition(TankState.EVADING);
+
             foreach (var enemyCollider in SpottedEnemies())
             {
-               platoonController.enemySpotted(enemyCollider.gameObject); 
+                platoonController.enemySpotted(enemyCollider.gameObject);
             }
 
             stateMachine.transition(stateMachine.act());
         }
 
-        // when the platoon spot an enemy, compare the enemy power to the platoon power
-        // if enemy power higher, switch to flee
-        // if enemy power lower, switch to chase
-        // TODO: Write check enemy power function
-        
         void OnCollisionEnter(Collision collision)
         {
             //Reduce health
@@ -108,6 +108,16 @@ namespace Green
             }
         }
 
+        public void Start()
+        {
+            GetComponent<NavMeshAgent>().isStopped = false;
+        }
+
+        public void Stop()
+        {
+            GetComponent<NavMeshAgent>().isStopped = true;
+        }
+
         public bool Aim(GameObject target, float interceptorSpeed)
         {
             var aimPostion = calAimPosition(target, interceptorSpeed);
@@ -121,7 +131,8 @@ namespace Green
 
             // TODO: rotate the turret
             Quaternion lookRotation = Quaternion.LookRotation((Vector3) aimPostion);
-            turret.transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turretRotSpeed);
+            turret.transform.rotation =
+                Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turretRotSpeed);
             return false;
         }
 
@@ -129,7 +140,7 @@ namespace Green
         {
             Vector3 targetPosition = target.transform.position;
             Vector3 targetSpeed = target.GetComponent<Rigidbody>().velocity;
-            
+
             //Set target direction
             Vector3 targetDir = targetPosition - transform.position;
 
@@ -195,6 +206,16 @@ namespace Green
         public List<Collider> SpottedEnemies()
         {
             return checkSurroundings(spottingDistace, isEnemyTank);
+        }
+
+        public List<Collider> tanksInCrashDistance(float distance)
+        {
+            return checkSurroundings(distance, isOtherTank);
+        }
+
+        private bool isOtherTank(Collider collider)
+        {
+            return !collider.gameObject.Equals(gameObject) && collider.gameObject.GetComponent<NavMeshAgent>() != null;
         }
 
         private bool isEnemyTank(Collider collider)

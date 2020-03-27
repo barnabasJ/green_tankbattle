@@ -3,38 +3,52 @@ using System.Collections.Generic;
 using GreenStateMachine;
 using UnityEngine;
 using Green;
+using UnityEngine.AI;
 
-public class ChaseState : State<TankState>
+namespace Green
 {
-    private TankController tankController;
-    private Target target;
-    private Collider targetEnemy;
-    public List<Collider> spottedEnemies;
+    public class ChaseState : State<TankState>
+    {
+        private TankController tankController;
+
         public ChaseState(GameObject gameObject, TankController tankController) : base(gameObject)
         {
             this.tankController = tankController;
-            target = new Target();
         }
-
-        // when enter this state, get the current enemy that the group is chasing
+        
         public override void onStateEnter()
         {
-            spottedEnemies = tankController.EnemiesInAttackRange();
-            if ( spottedEnemies.Count > 0)
-            {
-                this.targetEnemy = spottedEnemies[0];
-            }
-            
-        }
-        public override void onStateExit()
-        {
-            
+            tankController.Start();
         }
 
-        public override TankState? act(){
-            if(spottedEnemies.Count > 0) {
-                target.UpdateTargets(targetEnemy.gameObject.transform.position);
-            }
+        public override void onStateExit()
+        {
+            tankController.Stop();
+        }
+
+        public override TankState? act()
+        {
+            var target = tankController.platoonController.getEnemyTarget();
+
+            // no targets -> regroup
+            if (target == null)
+                return TankState.REGROUPING;
+
+            // enemies in attackRange -> attack 
+            if (tankController.EnemiesInAttackRange().Count > 0)
+                return TankState.ATTACKING;
+
+            // calculate the nearest position in the middle of the attack range
+            var directionFromEnemyToPlayer = (tankController.transform.position -
+                                              target.transform.position)
+                .normalized;
+
+            var dest = target.transform.position + directionFromEnemyToPlayer *
+                (tankController.maxAttackRange - tankController.minAttackRange);
+
+            // move towards it 
+            tankController.GetComponent<NavMeshAgent>().destination = dest;
             return null;
         }
+    }
 }
