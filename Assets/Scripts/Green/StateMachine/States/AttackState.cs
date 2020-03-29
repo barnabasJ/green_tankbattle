@@ -62,7 +62,7 @@ namespace Green
         public void dodgeAttacks()
         {
             Debug.Log("Moving forwards");
-            gameObject.transform.position += gameObject.transform.forward * Time.deltaTime * tankController.maxForwardSpeed;
+            gameObject.transform.position += gameObject.transform.forward * (Time.deltaTime * tankController.maxForwardSpeed);
         }
     }
 }
