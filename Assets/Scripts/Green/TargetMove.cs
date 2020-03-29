@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class TargetMove : MonoBehaviour
+{
+    public float delta = 1.5f;  // Amount to move left and right from the start point
+    public float speed = 2.0f; 
+    private Vector3 startPos;
+ 
+    void Start () {
+        startPos = transform.position;
+    }
+     
+    void Update () {
+        Vector3 v = startPos;
+        v.z += delta * Mathf.Sin (Time.time * speed);
+        transform.position = v;
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (other.transform.tag == "Bullet")
+        {
+            Debug.Log("Hit");
+        }
+    }
+}

@@ -24,6 +24,7 @@ namespace Green
         public GameObject Bullet;
         private Transform turret;
         private Transform bulletSpawnPoint;
+        private Vector3 aimStartPos;
 
         private StateMachine<TankState> stateMachine;
         public PlatoonController platoonController { get; private set; }
@@ -32,6 +33,7 @@ namespace Green
         public int health { get; private set; }
         public float curSpeed { get; private set; }
         public float targetSpeed { get; private set; }
+        private Vector3 targetPreviousPos;
         public float rotSpeed { get; private set; }
         public float turretRotSpeed { get; } = 10.0f;
         public float maxForwardSpeed { get; } = 300.0f;
@@ -69,6 +71,10 @@ namespace Green
                     TankState.ATTACKING,
                     new AttackState(gameObject, this)
                 },
+                {
+                    TankState.DEAD,
+                    new DeathState(gameObject, this)
+                },
                 {TankState.EVADING, new EvadeState(gameObject, this)},
                 {TankState.REGROUPING, new RegroupState(gameObject, this)}
             };
@@ -96,7 +102,7 @@ namespace Green
             if (collision.gameObject.CompareTag("Bullet"))
             {
                 health -= 5;
-                Debug.Log("Tank health: " + health);
+                Debug.Log(health);
                 if (health <= 50)
                 {
                     stateMachine.transition(TankState.FLEE);
@@ -120,15 +126,15 @@ namespace Green
 
         public bool Aim(GameObject target)
         {
-            float angle = 10;
-            if  ( Vector3.Angle(turret.transform.forward, transform.position - turret.transform.position) < angle)
+            aimStartPos = new Vector3(turret.transform.position.x + 5f, turret.transform.position.y - 0.5f, turret.transform.position.z);
+            var velocity = (target.transform.position - targetPreviousPos) / Time.deltaTime;
+/*            if  (checkLineOfSight())
             {
                 return true;
-            }
-            
-            // Determine which direction to rotate towards
-            Vector3 targetDirection = target.transform.position - transform.position;
+            }*/
 
+            // Determine which direction to rotate towards
+            Vector3 targetDirection = FindInterceptVector(aimStartPos, 600f, target.transform.position, velocity);
             // The step size is equal to speed times frame time.
             float singleStep = rotSpeed * Time.deltaTime;
 
@@ -140,49 +146,68 @@ namespace Green
 
             // Calculate a rotation a step closer to the target and applies rotation to this object
             turret.transform.rotation = Quaternion.LookRotation(newDirection);
-            
+
+            targetPreviousPos = target.transform.position;
             return false;
         }
+        
+        private Vector3 FindInterceptVector(Vector3 shotOrigin, float shotSpeed,
+            Vector3 targetOrigin, Vector3 targetVel) {
+   
+            Vector3 dirToTarget = Vector3.Normalize(targetOrigin - shotOrigin);
+   
+            // Decompose the target's velocity into the part parallel to the
+            // direction to the cannon and the part tangential to it.
+            // The part towards the cannon is found by projecting the target's
+            // velocity on dirToTarget using a dot product.
+            Vector3 targetVelOrth =
+                Vector3.Dot(targetVel, dirToTarget) * dirToTarget;
+   
+            // The tangential part is then found by subtracting the
+            // result from the target velocity.
+            Vector3 targetVelTang = targetVel - targetVelOrth;
 
-        /*private Vector3? calAimPosition(GameObject target, float aInterceptorSpeed)
-        {
-            Vector3 targetPosition = target.transform.position;
-            Vector3 targetSpeed = target.GetComponent<Rigidbody>().velocity;
-
-            //Set target direction
-            Vector3 targetDir = targetPosition - transform.position;
-
-            float iSpeed2 = aInterceptorSpeed * aInterceptorSpeed;
-
-            //Calculating with square magnitute is faster.
-            float tSpeed2 = targetSpeed.sqrMagnitude;
-
-
-            float fDot1 = Vector3.Dot(targetDir, targetSpeed);
-            float targetDist2 = targetDir.sqrMagnitude;
-            float d = (fDot1 * fDot1) - targetDist2 * (tSpeed2 - iSpeed2);
-            if (d < 0.1f) // negative means that no possible course is valid because the interceptor isn't fast enough
-                return null;
-            float sqrt = Mathf.Sqrt(d);
-            float S1 = (-fDot1 - sqrt) / targetDist2;
-            float S2 = (-fDot1 + sqrt) / targetDist2;
-            if (S1 < 0.0001f)
-            {
-                if (S2 < 0.0001f)
-                    return null;
-                else
-                    return (S2) * targetDir + targetSpeed;
+            // The tangential component of the velocities should be the same
+            // (or there is no chance to hit)
+            // THIS IS THE MAIN INSIGHT!
+            Vector3 shotVelTang = targetVelTang;
+   
+            // Now all we have to find is the orthogonal velocity of the shot
+   
+            float shotVelSpeed = shotVelTang.magnitude;
+            if (shotVelSpeed > shotSpeed) {
+                // Shot is too slow to intercept target, it will never catch up.
+                // Do our best by aiming in the direction of the targets velocity.
+                return targetVel.normalized * shotSpeed;
+            } else {
+                // We know the shot speed, and the tangential velocity.
+                // Using pythagoras we can find the orthogonal velocity.
+                float shotSpeedOrth =
+                    Mathf.Sqrt(shotSpeed * shotSpeed - shotVelSpeed * shotVelSpeed);
+                Vector3 shotVelOrth = dirToTarget * shotSpeedOrth;
+       
+                // Finally, add the tangential and orthogonal velocities.
+                return shotVelOrth + shotVelTang;
             }
-            else if (S2 < 0.0001f)
-                return (S1) * targetDir + targetSpeed;
-            else if (S1 < S2)
-                return (S2) * targetDir + targetSpeed;
-            else
-                return (S1) * targetDir + targetSpeed;
-        }*/
+        }
 
+        public Boolean checkLineOfSight()
+        {
+            RaycastHit hit;
+            Debug.DrawRay(aimStartPos, turret.forward * maxAttackRange, Color.blue);
+            if (Physics.Raycast(aimStartPos, turret.forward * maxAttackRange, out hit))
+            {
+                Debug.Log(hit.collider.tag);
+                if (!hit.collider.CompareTag("GreenTank"))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
         /// <summary>
-        /// Shots a bullet if enough time is elapsed
+        /// Shoots a bullet if enough time is elapsed
         /// </summary>
         /// <returns>The time until shooting again is possible</returns>
         public float Shoot()
