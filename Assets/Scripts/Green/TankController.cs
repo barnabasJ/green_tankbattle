@@ -35,7 +35,7 @@ namespace Green
         public float curSpeed { get; private set; }
         public float targetSpeed { get; private set; }
         private Vector3 targetPreviousPos;
-        public float rotSpeed { get; private set; }
+        public float rotSpeed { get; private set; } = 10f;
         public float turretRotSpeed { get; } = 10.0f;
         public float maxForwardSpeed { get; } = 300.0f;
         public float maxBackwardSpeed { get; } = -300.0f;
@@ -75,6 +75,10 @@ namespace Green
                 {
                     TankState.DEAD,
                     new DeathState(gameObject, this)
+                },
+                {
+                    TankState.FLEE,
+                    new FleeState(gameObject, this)
                 },
                 {TankState.EVADING, new EvadeState(gameObject, this)},
                 {TankState.REGROUPING, new RegroupState(gameObject, this)},
@@ -129,22 +133,26 @@ namespace Green
             GetComponent<NavMeshAgent>().isStopped = true;
         }
 
-        public bool Aim(GameObject target)
-        {   
-            if(target == null) {
-                return false;
-            }
-            aimStartPos = new Vector3(turret.transform.position.x + 5f, turret.transform.position.y - 0.5f, turret.transform.position.z);
-            var velocity = (target.transform.position - targetPreviousPos) / Time.deltaTime;
-/*            if  (checkLineOfSight())
-            {
-                return true;
-            }*/
+        public void Aim()
+        {
+            GameObject target = platoonController.getEnemyTarget();
 
+            if (target == null)
+            {
+                return;
+            }
+            
+            //Get the aim starting position
+            aimStartPos = new Vector3(turret.transform.position.x + 5f, turret.transform.position.y - 0.5f, turret.transform.position.z);
+            
+            //Calculate the target velocity
+            var velocity = (target.transform.position - targetPreviousPos) / Time.deltaTime;
+            
+            
             // Determine which direction to rotate towards
             Vector3 targetDirection = FindInterceptVector(aimStartPos, 600f, target.transform.position, velocity);
             // The step size is equal to speed times frame time.
-            float singleStep = rotSpeed * Time.deltaTime;
+            float singleStep = turretRotSpeed * Time.deltaTime;
 
             // Rotate the forward vector towards the target direction by one step
             Vector3 newDirection = Vector3.RotateTowards(turret.transform.forward, targetDirection, singleStep, 0.0f);
@@ -156,7 +164,6 @@ namespace Green
             turret.transform.rotation = Quaternion.LookRotation(newDirection);
 
             targetPreviousPos = target.transform.position;
-            return false;
         }
         
         private Vector3 FindInterceptVector(Vector3 shotOrigin, float shotSpeed,
@@ -205,7 +212,6 @@ namespace Green
             Debug.DrawRay(aimStartPos, turret.forward * maxAttackRange, Color.blue);
             if (Physics.Raycast(aimStartPos, turret.forward * maxAttackRange, out hit))
             {
-                //Debug.Log(hit.collider.tag);
                 if (!hit.collider.CompareTag("GreenTank"))
                 {
                     return true;

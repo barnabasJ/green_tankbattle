@@ -31,6 +31,8 @@ namespace Green
 
         public override TankState? act()
         {
+            tankController.Aim();
+
             var tanks = tankController.tanksInCrashDistance(evadeRadius);
 
             if (tanks.Count <= 0) return TankState.REGROUPING;

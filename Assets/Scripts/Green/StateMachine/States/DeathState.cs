@@ -9,7 +9,7 @@ public class DeathState : State<TankState>
 {
     private TankController tankController;
 
-        public DeathState(GameObject gameObject, TankController tankController) : base(gameObject)
+    public DeathState(GameObject gameObject, TankController tankController) : base(gameObject)
         {
             this.tankController = tankController;
         }
