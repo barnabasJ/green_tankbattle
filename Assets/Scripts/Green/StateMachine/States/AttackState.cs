@@ -87,7 +87,7 @@ namespace Green
         //Moves the tank around with the goal of dodging incoming bullets
         public void dodgeAttacks()
         {
-            Debug.Log("Moving");
+            //Debug.Log("Moving");
             moving = true;
             Vector3 dest = new Vector3(gameObject.transform.position.x + 100f, gameObject.transform.transform.position.y, gameObject.transform.transform.position.z);
             tankController.GetComponent<NavMeshAgent>().destination = dest;

@@ -30,7 +30,8 @@ namespace Green
         public PlatoonController platoonController { get; private set; }
 
         // config
-        public int health { get; private set; }
+        //public int health { get; private set; }
+        public int health;
         public float curSpeed { get; private set; }
         public float targetSpeed { get; private set; }
         private Vector3 targetPreviousPos;
@@ -76,7 +77,8 @@ namespace Green
                     new DeathState(gameObject, this)
                 },
                 {TankState.EVADING, new EvadeState(gameObject, this)},
-                {TankState.REGROUPING, new RegroupState(gameObject, this)}
+                {TankState.REGROUPING, new RegroupState(gameObject, this)},
+                {TankState.FLEE, new FleeState(gameObject, this)}
             };
 
             stateMachine = new StateMachine<TankState>(stateMap);
@@ -88,12 +90,23 @@ namespace Green
             if (tanksInCrashDistance(evadeDistance).Count > 0)
                 stateMachine.transition(TankState.EVADING);
 
+            
             foreach (var enemyCollider in SpottedEnemies())
             {
                 platoonController.enemySpotted(enemyCollider.gameObject);
             }
 
+            if (SpottedEnemies().Count >= platoonController.getAliveTanks().Count)
+            {
+                stateMachine.transition(TankState.FLEE);
+            }
+
+            if (health <= 0)
+            {
+                stateMachine.transition(TankState.DEAD);
+            }
             stateMachine.transition(stateMachine.act());
+            
         }
 
         void OnCollisionEnter(Collision collision)
@@ -102,15 +115,7 @@ namespace Green
             if (collision.gameObject.CompareTag("Bullet"))
             {
                 health -= 5;
-                Debug.Log(health);
-                if (health <= 50)
-                {
-                    stateMachine.transition(TankState.FLEE);
-                }
-                else if (health <= 0)
-                {
-                    stateMachine.transition(TankState.DEAD);
-                }
+                //Debug.Log(health);
             }
         }
 
@@ -125,7 +130,10 @@ namespace Green
         }
 
         public bool Aim(GameObject target)
-        {
+        {   
+            if(target == null) {
+                return false;
+            }
             aimStartPos = new Vector3(turret.transform.position.x + 5f, turret.transform.position.y - 0.5f, turret.transform.position.z);
             var velocity = (target.transform.position - targetPreviousPos) / Time.deltaTime;
 /*            if  (checkLineOfSight())
@@ -197,7 +205,7 @@ namespace Green
             Debug.DrawRay(aimStartPos, turret.forward * maxAttackRange, Color.blue);
             if (Physics.Raycast(aimStartPos, turret.forward * maxAttackRange, out hit))
             {
-                Debug.Log(hit.collider.tag);
+                //Debug.Log(hit.collider.tag);
                 if (!hit.collider.CompareTag("GreenTank"))
                 {
                     return true;

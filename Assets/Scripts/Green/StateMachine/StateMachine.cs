@@ -27,13 +27,15 @@ namespace GreenStateMachine
             if (stateMap.ContainsKey((T) e))
             {
                 currentState?.onStateExit();
-                Debug.Log("Exiting: " + currentState);
+                //Debug.Log("Exiting: " + currentState);
                 currentState = stateMap[(T) e];
                 currentState.onStateEnter();
-                Debug.Log("Entering: " + currentState);
+                //Debug.Log("Entering: " + currentState);
             }
-            else
+            else{
                 throw new ArgumentException("There is no tranisiton for this event");
+            }
+                
         }
     }
 }
