@@ -87,10 +87,14 @@ namespace Green
 
         protected void Update()
         {
+            
+            
             if (health <= 0)
             {
                 stateMachine.transition(TankState.DEAD);
             }
+            
+            if (!CompareTag("GreenTank")) return;
             
             if (tanksInCrashDistance(evadeDistance).Count > 0)
                 stateMachine.transition(TankState.EVADING);
@@ -116,7 +120,7 @@ namespace Green
             //Reduce health
             if (collision.gameObject.CompareTag("Bullet"))
             {
-                health -= 5;
+                health -= 25;
                 Debug.Log(health);
             }
         }
@@ -164,7 +168,20 @@ namespace Green
 
             targetPreviousPos = target.transform.position;
         }
+
+        public void ResetAim()
+        {
+            // The step size is equal to speed times frame time.
+            float singleStep = turretRotSpeed * Time.deltaTime;
+            
+            // Rotate the forward vector towards the target direction by one step
+            Vector3 newDirection = Vector3.RotateTowards(turret.transform.forward, transform.forward, singleStep, 0.0f);
+            
+            // Calculate a rotation a step closer to the target and applies rotation to this object
+            turret.transform.rotation = Quaternion.LookRotation(newDirection);
+        }
         
+
         private Vector3 FindInterceptVector(Vector3 shotOrigin, float shotSpeed,
             Vector3 targetOrigin, Vector3 targetVel) {
    

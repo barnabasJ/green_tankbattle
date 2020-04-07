@@ -23,6 +23,7 @@ namespace Green
             // Find all tanks from the GreenPlatoon
             tanks = new List<GameObject>(GameObject.FindGameObjectsWithTag("GreenTank"));
         }
+        
 
         public GameObject getEnemyTarget()
         {

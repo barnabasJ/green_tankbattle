@@ -11,7 +11,9 @@ namespace Green
         private TankController tankController;
 
         private RaycastHit[] hitInfo;
-        private float evadeRadius;
+        public static float evadeRadius;
+
+        public static TankState previousState;
 
         public EvadeState(GameObject givenGameObject, TankController givenTankController) : base(givenGameObject)
         {
@@ -35,7 +37,7 @@ namespace Green
 
             var tanks = tankController.tanksInCrashDistance(evadeRadius);
 
-            if (tanks.Count <= 0) return TankState.REGROUPING;
+            if (tanks.Count <= 0) return previousState;
 
             var evadeDir = Vector3.zero;
             foreach (var tank in tanks)

@@ -9,8 +9,6 @@ namespace Green
     {
         private readonly Vector3 regroupingLocation;
 
-        private readonly Target target;
-
         private readonly TankController _tankController;
 
         public RegroupState(GameObject gameObject, TankController tankController) : base(gameObject)
@@ -42,11 +40,6 @@ namespace Green
         {
             return Vector3.Distance(_tankController.transform.position,
                 _tankController.platoonController.getPlatoonMeanPosition()) < 100f;
-        }
-
-        private void OrderTanksTowardsRegroupingLocation()
-        {
-            target.UpdateTargets(regroupingLocation);
         }
     }
 }

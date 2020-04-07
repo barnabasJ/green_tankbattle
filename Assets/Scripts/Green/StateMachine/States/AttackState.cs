@@ -44,15 +44,18 @@ namespace Green
             currentTarget = platoonController.getEnemyTarget();
             tankController.Aim();
 
+            var tanks = tankController.tanksInCrashDistance(EvadeState.evadeRadius);
+            if (tanks.Count > 0 && !tankController.checkLineOfSight())
+            {
+                EvadeState.previousState = TankState.ATTACKING;
+                return TankState.EVADING;
+            }
+            
             //Check line of sight
             if (tankController.checkLineOfSight())
             {
                 //Line of sight clear, dodge and shoot
                 tankController.Shoot();
-            }
-            else
-            {
-                return TankState.EVADING;
             }
 
             if ( enemiesInRange == 0 && currentTargets != 0)
@@ -71,5 +74,6 @@ namespace Green
 
             return null;
         }
+        
     }
 }

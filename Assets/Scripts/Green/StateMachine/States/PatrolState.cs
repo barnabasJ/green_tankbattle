@@ -23,8 +23,6 @@ namespace Green
         // </summary>        
         private int _currentWayPointIndex;
 
-        private readonly Target target;
-
         public PatrolState(GameObject gameObject, TankController tankController) : base(gameObject)
         {
             _tankController = tankController;
@@ -45,6 +43,8 @@ namespace Green
         public override TankState? act()
         {
             if (_tankController.platoonController.getEnemyTarget() != null) return TankState.CHASE;
+            
+            _tankController.ResetAim();
 
             if (PlatoonHasReachedItsDestination())
                 _currentWayPointIndex = (_currentWayPointIndex + 1) % _wayPoints.Length;

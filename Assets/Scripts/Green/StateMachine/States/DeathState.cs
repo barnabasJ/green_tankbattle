@@ -17,7 +17,7 @@ public class DeathState : State<TankState>
         // when tank enter death state, stop it, then set it to passive
         public override void onStateEnter()
         {
-            Object.Destroy(tankController.gameObject);
+            tankController.gameObject.SetActive(false);
         }
 
         public override TankState? act()
