@@ -207,6 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Bullet: {fileID: 100000, guid: bb8ee67caaac226d68bcba128758522e, type: 3}
+  health: 0
 --- !u!195 &-8648531409219230934
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -221,7 +222,7 @@ NavMeshAgent:
   m_Acceleration: 60
   avoidancePriority: 50
   m_AngularSpeed: 60
-  m_StoppingDistance: 5
+  m_StoppingDistance: 50
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1

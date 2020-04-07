@@ -39,16 +39,7 @@ namespace Green
             //Check for current targets and enemies in range.
             currentTargets = platoonController.getCurrentTargets().Count;
             enemiesInRange = tankController.EnemiesInAttackRange().Count;
-            if (elapsedTime >= 10)
-            {
-                //Reset the time
-                elapsedTime = 0.0f;
-            }
-            else
-            {
-                elapsedTime += Time.deltaTime;
-            }
-
+            
             // aim and if target is locked -> shoot
             currentTarget = platoonController.getEnemyTarget();
             tankController.Aim();
@@ -64,13 +55,13 @@ namespace Green
                 return TankState.EVADING;
             }
 
-            if ( enemiesInRange == 0 && currentTargets != 0 && elapsedTime > 10)
+            if ( enemiesInRange == 0 && currentTargets != 0)
             {
                 return TankState.CHASE;
             }
                 
             // no more enemies around -> regroup
-            if ( enemiesInRange == 0 && currentTargets == 0 && elapsedTime > 10)
+            if ( enemiesInRange == 0 && currentTargets == 0)
             {
                 return TankState.REGROUPING;
             }

@@ -115,6 +115,7 @@ namespace Green
             if (collision.gameObject.CompareTag("Bullet"))
             {
                 health -= 5;
+                Debug.Log(health);
             }
         }
 
@@ -143,9 +144,10 @@ namespace Green
             //Calculate the target velocity
             var velocity = (target.transform.position - targetPreviousPos) / Time.deltaTime;
             
+            Vector3 targetPos = new Vector3(target.transform.position.x,target.transform.position.y +1.5f, target.transform.position.z);
             
             // Determine which direction to rotate towards
-            Vector3 targetDirection = FindInterceptVector(aimStartPos, 600f, target.transform.position, velocity);
+            Vector3 targetDirection = FindInterceptVector(aimStartPos, 600f, targetPos, velocity);
             // The step size is equal to speed times frame time.
             float singleStep = turretRotSpeed * Time.deltaTime;
 
