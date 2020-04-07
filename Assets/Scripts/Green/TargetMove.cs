@@ -9,11 +9,11 @@ public class TargetMove : MonoBehaviour
     public float speed = 2.0f; 
     private Vector3 startPos;
  
-    void Start () {
+    public void Start () {
         startPos = transform.position;
     }
      
-    void Update () {
+    public void Update () {
         Vector3 v = startPos;
         v.z += delta * Mathf.Sin (Time.time * speed);
         transform.position = v;
@@ -21,7 +21,7 @@ public class TargetMove : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.transform.tag == "Bullet")
+        if (other.transform.CompareTag("Bullet"))
         {
             Debug.Log("Hit");
         }

@@ -87,6 +87,11 @@ namespace Green
 
         protected void Update()
         {
+            if (health <= 0)
+            {
+                stateMachine.transition(TankState.DEAD);
+            }
+            
             if (tanksInCrashDistance(evadeDistance).Count > 0)
                 stateMachine.transition(TankState.EVADING);
 
@@ -101,10 +106,7 @@ namespace Green
                 stateMachine.transition(TankState.FLEE);
             }
 
-            if (health <= 0)
-            {
-                stateMachine.transition(TankState.DEAD);
-            }
+
             stateMachine.transition(stateMachine.act());
             
         }

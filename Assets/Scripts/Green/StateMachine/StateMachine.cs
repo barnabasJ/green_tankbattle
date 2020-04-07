@@ -16,7 +16,6 @@ namespace GreenStateMachine
 
         public T? act()
         {
-            Debug.Log("current state: " + currentState + " acting");    
             return currentState.act();
         }
 
@@ -27,10 +26,8 @@ namespace GreenStateMachine
             if (stateMap.ContainsKey((T) e))
             {
                 currentState?.onStateExit();
-                Debug.Log("Exiting: " + currentState);
                 currentState = stateMap[(T) e];
                 currentState.onStateEnter();
-                Debug.Log("Entering: " + currentState);
             }
             else{
                 throw new ArgumentException("There is no tranisiton for this event");
