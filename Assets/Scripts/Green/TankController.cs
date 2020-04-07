@@ -76,10 +76,6 @@ namespace Green
                     TankState.DEAD,
                     new DeathState(gameObject, this)
                 },
-                {
-                    TankState.FLEE,
-                    new FleeState(gameObject, this)
-                },
                 {TankState.EVADING, new EvadeState(gameObject, this)},
                 {TankState.REGROUPING, new RegroupState(gameObject, this)},
                 {TankState.FLEE, new FleeState(gameObject, this)}
@@ -119,7 +115,6 @@ namespace Green
             if (collision.gameObject.CompareTag("Bullet"))
             {
                 health -= 5;
-                //Debug.Log(health);
             }
         }
 

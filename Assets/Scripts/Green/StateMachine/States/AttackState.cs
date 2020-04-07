@@ -56,7 +56,6 @@ namespace Green
             //Check line of sight
             if (tankController.checkLineOfSight())
             {
-                Debug.Log("Line of sight clear");
                 //Line of sight clear, dodge and shoot
                 tankController.Shoot();
             }
@@ -80,23 +79,6 @@ namespace Green
             tankController.GetComponent<NavMeshAgent>().destination = destination * (tankController.GetComponent<NavMeshAgent>().stoppingDistance + 10);
 
             return null;
-        }
-
-        public Vector3 moveOutOfTheWay()
-        {
-            float random = Random.Range(-10.0f, 10.0f);
-            float x = gameObject.transform.position.x + random;
-            float y = gameObject.transform.position.y + random;
-            return  new Vector3(x, y, gameObject.transform.position.z);
-        }
-
-        //Moves the tank around with the goal of dodging incoming bullets
-        public Vector3 dodgeAttacks()
-        {
-            totalTime += Time.deltaTime * tankController.maxForwardSpeed;
-            float x = Mathf.Cos(totalTime) * 5;
-            x += currentTarget.transform.position.x;
-            return new Vector3(x + currentTarget.transform.position.x, currentTarget.transform.position.y , currentTarget.transform.position.z);
         }
     }
 }
